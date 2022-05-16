@@ -33,7 +33,7 @@ const receiveFile = multer({ storage: storage }).single('image')
 
 const respond = (req, res) => {
     res.json({
-        url: storedImages[storedImages.length - 1]
+        url: '/stored/' + storedImages[storedImages.length - 1]
     })
 }
 
