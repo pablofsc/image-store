@@ -11,19 +11,11 @@ const app = express()
 
 app.use(helmet())
 app.use(compression())
-
-app.use(cors({
-    origin: 'http://localhost:3000'
-}))
-
+app.use(cors())
 app.use(express.json())
 app.use('/', routes)
 app.use('/stored', express.static('./uploads'))
 
-app.route('/').get((req, res) => {
-    res.sendFile(process.cwd() + '/index.html')
-})
-
-const listener = app.listen(process.env.PORT || 3000, () => {
+const listener = app.listen(process.env.PORT || 3001, () => {
     console.log('LISTENING ON PORT', listener.address().port)
 })

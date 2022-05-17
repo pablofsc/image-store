@@ -1,9 +1,10 @@
 const express = require('express')
 
-const controller = require('./controllers.js')
-
+const controllers = require('./controllers.js')
+const utils = require('./utils.js')
 const router = express.Router()
 
-router.post('/store', controller.receiveFile, controller.respond)
+router.post('/store', utils.receiveFile, controllers.respond)
+router.get('/', controllers.index)
 
 module.exports = router

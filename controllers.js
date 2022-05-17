@@ -1,35 +1,4 @@
-const multer = require('multer')
-const path = require('path')
-const fsextra = require('fs-extra')
-
-storedImages = []
-
-const deleteFile = (fileName) => {
-    console.log(`Deleting ${fileName}`)
-
-    storedImages.shift()
-    fsextra.removeSync('./uploads/' + fileName)
-
-    console.log(storedImages)
-}
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads');
-    },
-    filename: (req, file, cb) => {
-        const fileName = Date.now().toString(16) + path.extname(file.originalname)
-
-        console.log(`Storing ${fileName}`)
-        storedImages.push(fileName)
-
-        cb(null, fileName);
-
-        setTimeout(() => deleteFile(fileName), 300000)
-    }
-})
-
-const receiveFile = multer({ storage: storage }).single('image')
+const utils = require('./utils.js')
 
 const respond = (req, res) => {
     res.json({
@@ -37,4 +6,25 @@ const respond = (req, res) => {
     })
 }
 
-module.exports = { storedImages, receiveFile, respond }
+const index = (req, res) => {
+    let styles = `
+    <style> 
+        * {
+            font-family: Tahoma, sans-serif
+        }
+    </style>
+    `
+
+    let list = `Currently storing nothing.`
+
+    if (storedImages.length > 0) {
+        list = `
+        Currently storing ${storedImages.length} image${storedImages.length > 1 ? `s` : ``}:
+        ${utils.generateHtmlList(storedImages)}
+        `
+    }
+
+    res.send(styles + `<h1>Seems to be working.</h1>` + list)
+}
+
+module.exports = { respond, index }
