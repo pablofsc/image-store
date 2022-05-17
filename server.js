@@ -24,6 +24,6 @@ app.route('/').get((req, res) => {
     res.sendFile(process.cwd() + '/index.html')
 })
 
-const listener = app.listen(3001, () => {
+const listener = app.listen(process.env.PORT || 3000, () => {
     console.log('LISTENING ON PORT', listener.address().port)
 })
