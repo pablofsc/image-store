@@ -18,6 +18,11 @@ const storage = multer.diskStorage({
         cb(null, './uploads');
     },
     filename: (req, file, cb) => {
+        if (storedImages.length >= 10) {
+            cb(new Error('Refused to store a new image.'))
+            return
+        }
+
         const fileName = Date.now().toString(16) + path.extname(file.originalname)
 
         console.log(`Storing ${fileName}`)
@@ -29,7 +34,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const receiveFile = multer({ storage: storage }).single('image')
+const receiveFile = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } }).single('image')
 
 const generateHtmlList = (array) => {
     if (array.length > 0) {
